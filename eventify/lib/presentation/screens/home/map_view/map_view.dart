@@ -1,3 +1,4 @@
+import 'package:eventify/domain/providers/eventify_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,12 +16,124 @@ class _MapViewState extends State<MapView> {
   
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+   final dateController = TextEditingController();
+  final Set<Marker> _markers = {};
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      final provider = Provider.of<EventifyProvider>(context,listen: false);
+      provider.getEventos();
+    });
+  }
+  void onLongPress(LatLng position){
+    showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: Colors.lightBlue.shade50,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        title: const Text(
+          "Agregar Incidente",
+          style: TextStyle(color: Colors.blueAccent),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Campo de Nombre del Evento
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.event, color: Colors.blueAccent),
+                labelText: "Nombre del Evento",
+                labelStyle: const TextStyle(color: Colors.blueAccent),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 20.0),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Campo de Fecha con DatePicker
+            TextField(
+              controller: dateController,
+              readOnly: true, 
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.calendar_today, color: Colors.blueAccent),
+                labelText: "Fecha del Evento",
+                labelStyle: const TextStyle(color: Colors.blueAccent),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 20.0),
+                suffixIcon: const Icon(Icons.arrow_drop_down, color: Colors.blueAccent),
+              ),
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime(2101),
+                );
+
+                if (pickedDate != null) {
+                  String formattedDate =
+                      "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                  dateController.text = formattedDate;
+                }
+              },
+            ),
+            const SizedBox(height: 20),
+
+            // Campo de Descripción
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.description, color: Colors.blueAccent),
+                labelText: "Descripción",
+                labelStyle: const TextStyle(color: Colors.blueAccent),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 20.0),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: (){
+            context.pop();
+          }, child: const Text("Cancelar")),
+          TextButton(
+            onPressed: (){
+              context.pop();
+              setState(() {
+                _markers.add(Marker(
+                  markerId: MarkerId(position.toString()), 
+                  position: position,
+                  infoWindow: InfoWindow(
+                    title: titleController.text,
+                    snippet: descriptionController.text
+                  )));
+                titleController.clear();
+                descriptionController.clear();
+              });
+            }, 
+            child: const Text("Aceptar"))
+        ],
+      );
+    });
+  }
+
   Widget build(BuildContext context) {
     return GoogleMap(
       initialCameraPosition: 
         const CameraPosition(target: LatLng(21.128010, -101.687023), 
         zoom: 12),
+        onLongPress: onLongPress,
+        markers: _markers,
     );
   }
 }
