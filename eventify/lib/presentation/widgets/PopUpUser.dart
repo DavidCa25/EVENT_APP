@@ -12,10 +12,9 @@ class PopUpUser extends StatelessWidget {
   PopUpUser({super.key, required this.users, required this.eventId});
 
   Future<void> sendInvitation(BuildContext context, String? userId, String eventId) async {
-    final url = Uri.parse('http://localhost:4000/api/events/schedule-email-job'); // Cambia por tu URL base
+    final url = Uri.parse('http://localhost:4000/api/events/schedule-email-job'); 
 
       try {
-        // Enviar la petición POST al backend
         final response = await http.post(
           url,
           headers: {'Content-Type': 'application/json'},
