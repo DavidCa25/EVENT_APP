@@ -16,12 +16,11 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = Provider.of<EventifyProvider>(context, listen: false);
-      provider.getEventos(); 
+      Provider.of<EventifyProvider>(context, listen: false).getEventos();
     });
   }
 
-  void openUserPopUp(BuildContext context) {
+    void openUserPopUp(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => PopUpUser(),
@@ -34,50 +33,52 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<EventifyProvider>(context);
+
+    print("Eventos en el HomeView: ${provider.eventos}");
+
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Eventos"),
+        title: const Text(
+              "Mis Eventos",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Mis Eventos",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 15.0),
-          Expanded(
-            child: Consumer<EventifyProvider>(
-              builder: (context, provider, child) {
-                if (provider.eventos.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+          children: [
+            const SizedBox(height: 15.0),
+            Expanded(
+              child: provider.eventos.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: provider.eventos.length,
+                      itemBuilder: (context, index) {
+                        final evento = provider.eventos[index];
 
-                return ListView.builder(
-                  itemCount: provider.eventos.length,
-                  itemBuilder: (context, index) {
-                    final evento = provider.eventos[index];
-                    return GestureDetector(
-                      onTap: () => onEventSelected(context, evento.name),
-                      child: EventCard(
-                        title: evento.name,
-                        date: evento.date,
-                        description: evento.description,
-                        lat: evento.lat,
-                        lng: evento.lng,
-                      ),
-                    );
-                  },
-                );
-              },
+                        return GestureDetector(
+                          onTap: () => onEventSelected(context, evento.name),
+                          child: EventCard(
+                            name: evento.name,
+                            date: evento.date,
+                            description: evento.description,
+                            lat: evento.lat,
+                            lng: evento.lng,
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator(), 
+                    ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
-}
+

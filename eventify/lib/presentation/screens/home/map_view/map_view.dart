@@ -42,7 +42,6 @@ class _MapViewState extends State<MapView> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Campo de Nombre del Evento
             TextField(
               controller: titleController,
               decoration: InputDecoration(
@@ -56,8 +55,6 @@ class _MapViewState extends State<MapView> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Campo de Fecha con DatePicker
             TextField(
               controller: dateController,
               readOnly: true, 

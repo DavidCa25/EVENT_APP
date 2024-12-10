@@ -21,24 +21,22 @@ class Eventify {
   String toString() {
     return 'Eventify(name: $name, date: $date, description: $description, lat: $lat, lng: $lng)';
   }
-  // Conversión desde JSON
   factory Eventify.fromJson(Map<String, dynamic> json) {
     return Eventify(
-      id: json['_id'], // ID desde la respuesta
+      id: json['_id'],
       name: json['name'],
-      date: DateTime.parse(json['date']), // Convertir cadena a DateTime
+      date: DateTime.parse(json['date']),
       description: json['description'],
-      lat: json['lat'].toDouble(), // Asegurarse de que sea double
+      lat: json['lat'].toDouble(),
       lng: json['lng'].toDouble(),
-      creationDate: DateTime.parse(json['creationDate']), // Convertir cadena a DateTime
+      creationDate: DateTime.parse(json['creationDate']),
     );
   }
 
-  // Conversión a JSON (si necesitas enviar datos al backend)
   Map<String, dynamic> toJson() {
     return {
       "name": name,
-      "date": date.toIso8601String(), // Convertir DateTime a ISO 8601
+      "date": date.toIso8601String(),
       "description": description,
       "lat": lat,
       "lng": lng

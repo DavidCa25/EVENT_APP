@@ -65,7 +65,7 @@ class NavbarWidget extends StatelessWidget {
           );
         },
         child: Container(
-          key: ValueKey<int>(selected ? 1 : 0), // Clave única para activar la animación
+          key: ValueKey<int>(selected ? 1 : 0),
           width: 45,
           height: 45,
           decoration: BoxDecoration(

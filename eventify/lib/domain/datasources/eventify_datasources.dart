@@ -9,8 +9,8 @@ class EventifyDatasources {
       final response = await dio.get("/events");
       final data = response.data as List;
 
-      // Convertir cada elemento en una instancia de Eventify
       return data.map((item) => Eventify.fromJson(item)).toList();
+      print(data);
     } catch (e) {
       print("Error al obtener eventos: $e");
       rethrow;
@@ -22,7 +22,7 @@ class EventifyDatasources {
   Future createEvents(Eventify eventos) async{
     try{
       var dio = Dio();
-    dio.options.baseUrl = "https://f357-2806-2f0-6020-ae05-e436-29d5-9afe-a03b.ngrok-free.app/api/events";
+    dio.options.baseUrl = "http://localhost:4000/api/events";
     final response = await dio.post("/events",
     data: {
       "name": eventos.name,
