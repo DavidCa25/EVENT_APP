@@ -19,41 +19,31 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<EventifyProvider>(context, listen: false).getEventos();
-      Provider.of<UserProvider>(context,listen:false).getUsuarios();
+      Provider.of<UserProvider>(context, listen: false).getUsuarios();
     });
   }
 
-   void openUserPopUp(BuildContext context, List<User> users) {
-  showDialog(
-    context: context,
-    builder: (context) => PopUpUser(users: users),
-  );
-}
-
-
-
-  void onEventSelected(BuildContext context) {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
-
-  openUserPopUp(context, userProvider.usuarios);
-}
-
-
-
+  // Función para mostrar el popup con la lista de usuarios
+  void showUserPopup(BuildContext context, List<User> users, String eventId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PopUpUser(users: users, eventId: eventId);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<EventifyProvider>(context);
-
-    print("Eventos en el HomeView: ${provider.eventos}");
-
+    final eventifyProvider = Provider.of<EventifyProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-              "Mis Eventos",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+          "Mis Eventos",
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -62,14 +52,17 @@ class _HomeViewState extends State<HomeView> {
           children: [
             const SizedBox(height: 15.0),
             Expanded(
-              child: provider.eventos.isNotEmpty
+              child: eventifyProvider.eventos.isNotEmpty
                   ? ListView.builder(
-                      itemCount: provider.eventos.length,
+                      itemCount: eventifyProvider.eventos.length,
                       itemBuilder: (context, index) {
-                        final evento = provider.eventos[index];
+                        final evento = eventifyProvider.eventos[index];
 
                         return GestureDetector(
-                          onTap: () => onEventSelected(context),
+                          onTap: () {
+                            // Mostrar el popup al hacer clic en la card del evento
+                            showUserPopup(context, userProvider.usuarios, evento.id!);
+                          },
                           child: EventCard(
                             name: evento.name,
                             date: evento.date,
@@ -81,7 +74,7 @@ class _HomeViewState extends State<HomeView> {
                       },
                     )
                   : const Center(
-                      child: CircularProgressIndicator(), 
+                      child: CircularProgressIndicator(), // Indicador mientras se cargan los datos
                     ),
             ),
           ],
@@ -90,5 +83,6 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+
 
 
