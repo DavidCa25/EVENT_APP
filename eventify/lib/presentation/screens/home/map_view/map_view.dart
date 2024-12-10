@@ -1,3 +1,4 @@
+import 'package:eventify/domain/entities/eventify.dart';
 import 'package:eventify/domain/providers/eventify_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,7 +17,7 @@ class _MapViewState extends State<MapView> {
   
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
-   final dateController = TextEditingController();
+  final dateController = TextEditingController();
   final Set<Marker> _markers = {};
   @override
   void initState() {
@@ -87,7 +88,6 @@ class _MapViewState extends State<MapView> {
             ),
             const SizedBox(height: 20),
 
-            // Campo de Descripción
             TextField(
               controller: descriptionController,
               decoration: InputDecoration(
@@ -107,21 +107,45 @@ class _MapViewState extends State<MapView> {
             context.pop();
           }, child: const Text("Cancelar")),
           TextButton(
-            onPressed: (){
+            onPressed: () async {
               context.pop();
-              setState(() {
-                _markers.add(Marker(
-                  markerId: MarkerId(position.toString()), 
-                  position: position,
-                  infoWindow: InfoWindow(
-                    title: titleController.text,
-                    snippet: descriptionController.text
-                  )));
+              final provider = Provider.of<EventifyProvider>(context, listen: false);
+              try {
+                final parsedDate = DateTime.parse(dateController.text);
+                final newEvent = Eventify(
+                 name: titleController.text,
+                 date: parsedDate,
+                 description: descriptionController.text,
+                 lat: position.latitude,
+                 lng: position.longitude,
+                 creationDate: DateTime.now(),
+                );
+
+                await provider.addEventos(newEvent);
+
+                setState(() {
+                  _markers.add(Marker(
+                    markerId: MarkerId(position.toString()),
+                    position: position,
+                    infoWindow: InfoWindow(
+                      title: titleController.text,
+                      snippet: descriptionController.text,
+                    ),
+                  ));
+                });
+
                 titleController.clear();
                 descriptionController.clear();
-              });
-            }, 
-            child: const Text("Aceptar"))
+                dateController.clear();
+              } catch (e) {
+                print("Error al registrar el evento: $e");
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Error al registrar el evento")),
+                );
+              }
+            },
+            child: const Text("Aceptar"),
+          ),
         ],
       );
     });

@@ -1,3 +1,4 @@
+
 import 'package:eventify/domain/datasources/eventify_datasources.dart';
 import 'package:eventify/domain/entities/eventify.dart';
 import 'package:flutter/material.dart';
@@ -10,14 +11,15 @@ class EventifyProvider extends ChangeNotifier{
     required this.datasource
   });
 
-  Future getEventos() async{
+  Future<void> getEventos() async{
     final eventos = await datasource.getEventos();
-    print(eventos);
+    print(eventos.toString());
     notifyListeners();
   }
 
-  Future addEventos(Eventify eventos) async {
-    final newEvento = await datasource.createEvents(eventos);
-    
+  Future addEventos(Eventify evento) async {
+    final newEvento = await datasource.createEvents(evento);
+    eventos.add(evento);
+    notifyListeners();
   }
 }

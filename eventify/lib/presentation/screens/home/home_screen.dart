@@ -12,10 +12,9 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: IndexedStack(
         index: viewIndex,
-        // Elimina el const aquí también, ya que HomeView no es constante
         children: [
-          HomeView(),  // Aquí ya no es necesario el const
-          const MapView(),   // Lo mismo para MapView si también tiene valores dinámicos
+          HomeView(), 
+          const MapView(), 
         ],
       ),
       bottomNavigationBar: NavbarWidget(index: viewIndex),

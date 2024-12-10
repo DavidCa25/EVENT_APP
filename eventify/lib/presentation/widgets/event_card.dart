@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
+  final String title;
+  final DateTime date;
+  final String description;
+  final double lat;
+  final double lng;
 
-  final String title; 
-  final String location; 
-  final String time; 
-  final String date; 
-  final String month; 
   const EventCard({
     super.key,
     required this.title,
-    required this.location,
-    required this.time,
     required this.date,
-    required this.month,
+    required this.description,
+    required this.lat,
+    required this.lng,
   });
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(10.0),
@@ -32,85 +32,55 @@ class EventCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.purple,
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  date,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  month,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-          const SizedBox(width: 15.0),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                    const SizedBox(width: 5.0),
-                    Expanded(
-                      child: Text(
-                        location,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 5.0),
-                Row(
-                  children: [
-                    const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                    const SizedBox(width: 5.0),
-                    Text(
-                      time,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          const SizedBox(height: 5.0),
+
+          
+          Text(
+            'Fecha: ${date.toLocal()}.split(' ')[0]',
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.grey,
             ),
           ),
-          const Icon(Icons.edit, size: 20, color: Colors.purple),
+          const SizedBox(height: 5.0),
+
+          
+          Text(
+            description,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              const Icon(Icons.location_on, size: 20, color: Colors.red),
+              const SizedBox(width: 5.0),
+              Expanded(
+                child: Text(
+                  'Lat: $lat, Long: $lng',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
