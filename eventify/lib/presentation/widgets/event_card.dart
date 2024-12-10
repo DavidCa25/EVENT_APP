@@ -42,7 +42,7 @@ class EventCard extends StatelessWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: Colors.purple,
+              color: Colors.blueGrey,
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Column(
@@ -116,7 +116,7 @@ class EventCard extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.edit, size: 20, color: Colors.purple),
+          const Icon(Icons.edit, size: 20, color: Colors.blueGrey),
         ],
       ),
     );
