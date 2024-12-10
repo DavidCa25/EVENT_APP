@@ -1,4 +1,6 @@
+import 'package:eventify/domain/entities/user.dart';
 import 'package:eventify/domain/providers/eventify_provider.dart';
+import 'package:eventify/domain/providers/user_provider.dart';
 import 'package:eventify/presentation/widgets/PopUpUser.dart';
 import 'package:eventify/presentation/widgets/event_card.dart';
 import 'package:flutter/material.dart';
@@ -17,19 +19,27 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<EventifyProvider>(context, listen: false).getEventos();
+      Provider.of<UserProvider>(context,listen:false).getUsuarios();
     });
   }
 
-    void openUserPopUp(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => PopUpUser(),
-    );
-  }
+   void openUserPopUp(BuildContext context, List<User> users) {
+  showDialog(
+    context: context,
+    builder: (context) => PopUpUser(users: users),
+  );
+}
 
-  void onEventSelected(BuildContext context, String name) {
-    openUserPopUp(context);
-  }
+
+
+  void onEventSelected(BuildContext context) {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+  openUserPopUp(context, userProvider.usuarios);
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +69,7 @@ class _HomeViewState extends State<HomeView> {
                         final evento = provider.eventos[index];
 
                         return GestureDetector(
-                          onTap: () => onEventSelected(context, evento.name),
+                          onTap: () => onEventSelected(context),
                           child: EventCard(
                             name: evento.name,
                             date: evento.date,

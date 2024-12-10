@@ -1,18 +1,25 @@
 class User {
-  final String id;
+  final String? id;
   final String name;
   final String email;
-  final bool isEmailSent;
+  final bool? isEmailSent;
 
   User({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
-    required this.isEmailSent
+    this.isEmailSent
   });
 
   factory User.fromJson(Map<String, dynamic>json){
     return User(id: json["id"],name: json["name"], email: json["email"], isEmailSent: json["isEmailSent"]);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": name,
+      "email": email
+    };
   }
 
 }

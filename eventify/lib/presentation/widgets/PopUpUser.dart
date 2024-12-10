@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:eventify/domain/entities/user.dart';
+
 
 class PopUpUser extends StatelessWidget {
-  final List<String> users = [
-    'User 1',
-    'User 2',
-    'User 3',
-    'User 4',
-    'User 5',
-  ];
+  final List<User> users;
 
-  PopUpUser({super.key});
+  PopUpUser({super.key, required this.users});
 
-  void showCustomSnackBar(BuildContext context, String user) {
+  void showCustomSnackBar(BuildContext context, String userName) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -20,7 +17,7 @@ class PopUpUser extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Invitation sent to $user',
+                'Invitation sent to $userName',
                 style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ),
@@ -68,6 +65,7 @@ class PopUpUser extends StatelessWidget {
       ),
       content: SizedBox(
         width: double.maxFinite,
+        height: 300,
         child: ListView.separated(
           shrinkWrap: true,
           itemCount: users.length,
@@ -84,12 +82,13 @@ class PopUpUser extends StatelessWidget {
                   backgroundColor: Colors.blueAccent,
                   child: const Icon(Icons.person, color: Colors.white),
                 ),
-                title: Text(users[index]),
+                title: Text(users[index].name),
+                subtitle: Text(users[index].email),
                 trailing: IconButton(
                   icon: const Icon(Icons.send, color: Colors.green),
                   onPressed: () {
-                    Navigator.of(context).pop();  
-                    showCustomSnackBar(context, users[index]);
+                    Navigator.of(context).pop();
+                    showCustomSnackBar(context, users[index].name);
                   },
                 ),
               ),
@@ -99,9 +98,7 @@ class PopUpUser extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
           child: const Text('Close', style: TextStyle(color: Colors.black)),
         ),
       ],

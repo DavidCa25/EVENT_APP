@@ -27,7 +27,7 @@ class EventifyProvider extends ChangeNotifier{
 
     notifyListeners();
   } catch (e) {
-    print("Error al obtener eventos: $e");
+    print("Error al obtener eventos: $e");
   }
 }
 

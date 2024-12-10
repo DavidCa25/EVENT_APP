@@ -5,7 +5,7 @@ class UsersDatasources {
   Future<List<User>> getUsers() async {
 
     var dio = Dio();
-    dio.options.baseUrl = "https://localhost:4000/api";
+    dio.options.baseUrl = "http://localhost:4000/api/events";
     final response = await dio.get("/users");
     final data = response.data as List;
     final eventos = User.fromJson(data[0]);
